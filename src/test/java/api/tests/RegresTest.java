@@ -29,7 +29,7 @@ public class RegresTest {
 
         Assert.assertTrue(userPojoRs.data
                 .stream()
-                .allMatch(x -> x.getEmail().endsWith("@regres.in")));
+                .allMatch(x -> x.getEmail().endsWith("@reqres.in")));
 
         ArrayList<String> avatars = userPojoRs.data
                 .stream()
