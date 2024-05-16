@@ -1,9 +1,11 @@
+package ui.tests;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import pageObject.MainPage;
-import pageObject.SearchPage;
-import pageObjectActions.PageObjectActions;
+import ui.tests.pageObject.MainPage;
+import ui.tests.pageObject.SearchPage;
+import ui.tests.pageObject.PageObjectActions;
 
 public class AppleTest extends BaseTest {
     private final static String BASE_URL = "https://appleinsider.ru/";
