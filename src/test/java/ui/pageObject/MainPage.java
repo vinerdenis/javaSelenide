@@ -1,4 +1,4 @@
-package ui.tests.pageObject;
+package ui.pageObject;
 
 import com.codeborne.selenide.SelenideElement;
 
