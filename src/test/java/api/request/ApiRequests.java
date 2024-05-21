@@ -45,4 +45,34 @@ public class ApiRequests {
         return this;
     }
 
+    /**
+     * Send DELETE request.
+     * @param url - URL.
+     * @param statusCode - expected status code.
+     * @param endpoint - request endpoint.
+     */
+    public ApiRequests sendDeleteRequest(String url, int statusCode, String endpoint) {
+        Specifications.installSpecification(Specifications.requestSpec(url),Specifications.responseSpec(statusCode));
+        response = given()
+                .when()
+                .delete(endpoint);
+        return this;
+    }
+
+    /**
+     * Send PUT request.
+     * @param url - URL.
+     * @param statusCode - expected status code.
+     * @param body - request body.
+     * @param endpoint - request endpoint.
+     */
+    public ApiRequests sendPutRequest(String url, int statusCode, BasePojoRq body, String endpoint) {
+        Specifications.installSpecification(Specifications.requestSpec(url),Specifications.responseSpec(statusCode));
+        response = given()
+                .when()
+                .body(body)
+                .put(endpoint);
+        return this;
+    }
+
 }

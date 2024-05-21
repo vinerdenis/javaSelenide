@@ -2,6 +2,9 @@ package api.tests;
 
 import api.pojo.register.rq.RegisterPojoRq;
 import api.pojo.register.rs.RegisterPojoRs;
+import api.pojo.unknown.rs.UnknownPojoRs;
+import api.pojo.update.rq.UpdatePojoRq;
+import api.pojo.update.rs.UpdatePojoRs;
 import api.pojo.user.rs.UserPojoRs;
 import api.request.ApiRequests;
 import api.specs.Specifications;
@@ -9,6 +12,7 @@ import com.codeborne.selenide.As;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -21,6 +25,7 @@ public class RegresTest {
     private ApiRequests apiRequests;
 
     /**
+     * Get user list test
      * 1.Get user list.
      * Expected result:
      * 1. Avatar contains id.
@@ -105,5 +110,58 @@ public class RegresTest {
         RegisterPojoRs registerPojoRs = apiRequests.response.getBody().as(RegisterPojoRs.class);
 
         Assert.assertEquals("Invalid error","Missing password",registerPojoRs.error);
+    }
+
+    /**
+     * List<RESOURCES> test
+     * Steps:
+     * 1. Get List<RESOURCES>
+     * Expected result:
+     * Field "year" will be sorted
+     */
+    @Test
+    public void listResourcesTest() {
+        apiRequests = new ApiRequests()
+                .sendGetRequest(URL,200,"api/unknown");
+
+        UnknownPojoRs unknownPojoRs = apiRequests.response.getBody().as(UnknownPojoRs.class);
+
+        ArrayList<Integer> years = unknownPojoRs.data.stream().map(x -> x.year).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Integer> sortedYears = years.stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+
+        Assert.assertEquals("Invalid sort of years",sortedYears,years);
+    }
+
+    /**
+     * DELETE user test
+     * Steps:
+     * 1. DELETE /api/users/2
+     * Expected result:
+     * Status code = 204
+     */
+    @Test
+    public void deleteTest() {
+        apiRequests = new ApiRequests()
+                .sendDeleteRequest(URL,204,"/api/users/2");
+    }
+
+    @Test
+    public void updatePutTest() {
+        UpdatePojoRq updatePojoRq = UpdatePojoRq
+                .builder()
+                .name("morpheus")
+                .job("zion resident")
+                .build();
+
+        apiRequests = new ApiRequests()
+                .sendPutRequest(URL,200,updatePojoRq,"api/users/2");
+
+        UpdatePojoRs updatePojoRs = apiRequests.response.as(UpdatePojoRs.class);
+
+
+        String regex = "(.{11})$";
+        String currentTime = Clock.systemUTC().instant().toString().replaceAll(regex,"");
+        Assert.assertEquals("Invalid time",currentTime,updatePojoRs.updatedAt.replaceAll("(.{5})$",""));
+
     }
 }
